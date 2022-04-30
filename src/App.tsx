@@ -22,6 +22,7 @@ export default class App extends Component<{},IState>{
         this.setState({
             headerTitle: headerTitle
         })
+        document.title = headerTitle;
     }
 
     render() {
