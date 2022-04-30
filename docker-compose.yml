@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  exzork_booklist_react:
+    container_name: exzork_booklist_react
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/booklist-react
+      - /booklist-react/node_modules
+      - /booklist-react/build
+    environment:
+      - VIRTUAL_HOST=booklist-react.exzork.me
+      - LETSENCRYPT_HOST=booklist-react.exzork.me
+      - LETSENCRYPT_EMAIL=muhammadeko.if@gmail.com
+networks:
+  default :
+    name: nginx-proxy
