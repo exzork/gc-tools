@@ -17,6 +17,7 @@ export default function Artifacts() {
     const [selectedMainStat, setSelectedMainStat] = useState(0);
     const [selectedAffixes, setSelectedAffixes] = useState<number[]>([]);
     const [selectedAffixesAmount, setSelectedAffixesAmount] = useState<Record<number, number>>({});
+    const [artifactEnhancements, setArtifactEnhancements] = useState(0);
 
 
     const [artifactData, setArtifactData] = useState<IArtifact[]>([]);
@@ -52,7 +53,7 @@ export default function Artifacts() {
 
     useEffect(() => {
         handleGeneratedArtifact()
-    }, [uid, selectedArtifact, selectedMainStat, selectedAffixes, selectedAffixesAmount]);
+    }, [uid, selectedArtifact, selectedMainStat, selectedAffixes, selectedAffixesAmount, artifactEnhancements]);
 
     const handleArtifactChange = (event: any, value: any) => {
         if (value !== null) {
@@ -101,10 +102,9 @@ export default function Artifacts() {
                 return x;
             });
         }
-        const generated = "/giveart "+uid+" "+selectedArtifact+" "+selectedMainStat+" "+selectedAffixesCombine.join(" ")+" 21";
+        const generated = "/giveart "+uid+" "+selectedArtifact+" "+selectedMainStat+" "+selectedAffixesCombine.join(" ")+" "+Number(artifactEnhancements+1);
         setGeneratedArtifact(generated);
     };
-
     return (
             <form method="POST" className="space-y-8 divide-y divide-gray-200 bg-white p-10">
                 <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
@@ -176,6 +176,16 @@ export default function Artifacts() {
                                             </div>
                                         );
                                     })}
+                                </div>
+                            </div>
+                            <div
+                                className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                <label htmlFor="start_date"
+                                       className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                                    Artifact Sub Stats
+                                </label>
+                                <div className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto">
+                                    <input type="number" defaultValue="1" min="1" max="20" className="flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>setArtifactEnhancements(Number(e.currentTarget.value))}/>
                                 </div>
                             </div>
                             <div className="block sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
