@@ -2,14 +2,9 @@ version: '3.8'
 services:
   gc_tools:
     container_name: gc_tools
-    command: yarn start
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/gc_tools
-      - /gc_tools/node_modules
-      - /gc_tools/build
     environment:
       - VIRTUAL_HOST=gc-tools.exzork.me
       - LETSENCRYPT_HOST=gc-tools.exzork.me
