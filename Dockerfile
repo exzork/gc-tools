@@ -1,4 +1,4 @@
-FROM node:16-slim
+FROM node:18-slim
 ADD . /gc_tools
 WORKDIR /gc_tools
 RUN npm install

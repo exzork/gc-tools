@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/booklist-react
-      - /booklist-react/node_modules
-      - /booklist-react/build
+      - .:/gc_tools
+      - /gc_tools/node_modules
+      - /gc_tools/build
     environment:
       - VIRTUAL_HOST=gc-tools.exzork.me
       - LETSENCRYPT_HOST=gc-tools.exzork.me
