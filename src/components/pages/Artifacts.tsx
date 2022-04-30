@@ -182,10 +182,10 @@ export default function Artifacts() {
                                 className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <label htmlFor="start_date"
                                        className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                                    Artifact Sub Stats
+                                    Artifact Enhancement Level
                                 </label>
                                 <div className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto">
-                                    <input type="number" defaultValue="1" min="1" max="20" className="flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>setArtifactEnhancements(Number(e.currentTarget.value))}/>
+                                    <input type="number" defaultValue="1" min="1" max="20" className="w-full flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>setArtifactEnhancements(Number(e.currentTarget.value))}/>
                                 </div>
                             </div>
                             <div className="block sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
