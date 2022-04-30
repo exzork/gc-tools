@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  exzork_booklist_react:
-    container_name: exzork_booklist_react
+  gc_tools:
+    container_name: gc_tools
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,8 +10,8 @@ services:
       - /booklist-react/node_modules
       - /booklist-react/build
     environment:
-      - VIRTUAL_HOST=booklist-react.exzork.me
-      - LETSENCRYPT_HOST=booklist-react.exzork.me
+      - VIRTUAL_HOST=gc-tools.exzork.me
+      - LETSENCRYPT_HOST=gc-tools.exzork.me
       - LETSENCRYPT_EMAIL=muhammadeko.if@gmail.com
 networks:
   default :
