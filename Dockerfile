@@ -1,9 +1,8 @@
 FROM node:18-slim
 ADD . /gc_tools
 WORKDIR /gc_tools
-RUN npm install
-RUN npm install -g serve
-RUN npm run build
-CMD ["npm","install","-g","serve"]
+RUN ["yarn", "install"]
+RUN ["yarn", "run", "build"]
+CMD ["yarn","add","serve"]
 CMD ["serve", "-s", "build"]
 EXPOSE 3000
