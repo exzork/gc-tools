@@ -86,10 +86,15 @@ export default function Artifacts() {
     };
 
     const getPercent = (affix:IReliquaryAffix)=>{
-        if (affix.PropType.indexOf("PERCENT") !== -1 || affix.PropType.indexOf("CRITICAL") !== -1 || affix.PropType.indexOf("EFFICIENCY") !== -1 || affix.PropType.indexOf("HURT") !== -1) {
-            return parseFloat(String(affix.PropValue*100)).toPrecision(3) + "%";
+        try{
+            if (affix.PropType.indexOf("PERCENT") !== -1 || affix.PropType.indexOf("CRITICAL") !== -1 || affix.PropType.indexOf("EFFICIENCY") !== -1 || affix.PropType.indexOf("HURT") !== -1) {
+                return parseFloat(String(affix.PropValue*100)).toPrecision(3) + "%";
+            }
+            return parseInt(String(affix.PropValue));
+        }catch (e) {
+            console.log(e);
+            return parseInt(String(affix.PropValue));
         }
-        return parseInt(String(affix.PropValue));
     };
 
     const handleGeneratedArtifact = () => {
