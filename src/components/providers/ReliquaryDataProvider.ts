@@ -1,15 +1,15 @@
 export interface IReliquaryMain {
-    Id: number;
-    PropDepotId: number;
-    PropType:string;
-    AffixName:string;
+    id: number;
+    propDepotId: number;
+    propType:string;
+    affixName:string;
 }
 export interface IReliquaryAffix {
-    Id: number;
-    DepotId: number;
-    GroupId: number;
-    PropType:string;
-    PropValue:number;
+    id: number;
+    depotId: number;
+    groupId: number;
+    propType:string;
+    propValue:number;
 }
 export default class ReliquaryDataProvider {
     private static reliquaryMains:IReliquaryMain[] = [];
@@ -25,7 +25,7 @@ export default class ReliquaryDataProvider {
         let json:IReliquaryMain[] = await data.json();
         this.reliquaryMains = [];
         json.forEach(element => {
-            if (this.reliquaryMains.filter(x => x.PropType === element.PropType).length === 0)
+            if (this.reliquaryMains.filter(x => x.propType === element.propType).length === 0)
                 this.reliquaryMains.push(element)
         });
     }

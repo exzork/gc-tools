@@ -86,15 +86,10 @@ export default function Artifacts() {
     };
 
     const getPercent = (affix:IReliquaryAffix)=>{
-        try{
-            if (affix.PropType.indexOf("PERCENT") !== -1 || affix.PropType.indexOf("CRITICAL") !== -1 || affix.PropType.indexOf("EFFICIENCY") !== -1 || affix.PropType.indexOf("HURT") !== -1) {
-                return parseFloat(String(affix.PropValue*100)).toPrecision(3) + "%";
-            }
-            return parseInt(String(affix.PropValue));
-        }catch (e) {
-            console.log(e);
-            return parseInt(String(affix.PropValue));
+        if (affix.propType.indexOf("PERCENT") !== -1 || affix.propType.indexOf("CRITICAL") !== -1 || affix.propType.indexOf("EFFICIENCY") !== -1 || affix.propType.indexOf("HURT") !== -1) {
+            return parseFloat(String(affix.propValue*100)).toPrecision(3) + "%";
         }
+        return parseInt(String(affix.propValue));
     };
 
     const handleGeneratedArtifact = () => {
@@ -158,7 +153,7 @@ export default function Artifacts() {
                                             aria-label="Artifact Main Stats" id="ArtifactMainStats"
                                             className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                             options={reliquaryMains}
-                                            getOptionLabel={(option) => option.PropType}
+                                            getOptionLabel={(option) => option.propType}
                                             onChange={handleMainStatChange}
                                             renderInput={(params) => <TextField {...params} label="Main Stats" variant="outlined"/>}
                                         />
@@ -175,9 +170,9 @@ export default function Artifacts() {
                                     {reliquaryAffixes.map((affix, index) => {
                                         return (
                                             <div key={index} className="flex">
-                                                <input type="checkbox" className="mr-4 ml-4 focus:ring-indigo-500 h-4 w-4 mt-1 text-indigo-600 border-gray-300 rounded" value={affix.Id} id={"select-"+affix.Id} onChange={(e)=>handleAffixSelected(e,false,0)}/>
-                                                <label className="flex-grow" htmlFor={"select-"+affix.Id}>{affix.PropType +" - "+getPercent(affix)}</label>
-                                                <input type="number" defaultValue="1" min="1" className="flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>handleAffixSelected(e,true, affix.Id)}/>
+                                                <input type="checkbox" className="mr-4 ml-4 focus:ring-indigo-500 h-4 w-4 mt-1 text-indigo-600 border-gray-300 rounded" value={affix.id} id={"select-"+affix.id} onChange={(e)=>handleAffixSelected(e,false,0)}/>
+                                                <label className="flex-grow" htmlFor={"select-"+affix.id}>{affix.propType +" - "+getPercent(affix)}</label>
+                                                <input type="number" defaultValue="1" min="1" className="flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>handleAffixSelected(e,true, affix.id)}/>
                                             </div>
                                         );
                                     })}
