@@ -63,7 +63,7 @@ export default function Artifacts() {
 
     const handleMainStatChange = (event: any, value: any) => {
         if (value !== null) {
-            setSelectedMainStat(value.Id);
+            setSelectedMainStat(value.id);
         }
     };
 
