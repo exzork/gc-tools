@@ -20,6 +20,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/project/gc-tools/
+            git pull
             docker-compose down
             docker-compose build
             docker-compose up -d
