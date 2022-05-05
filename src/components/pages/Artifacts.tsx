@@ -1,8 +1,10 @@
 import {ChangeEvent, useEffect, useState} from "react";
 import ReliquaryDataProvider, {IReliquaryAffix, IReliquaryMain} from "../providers/ReliquaryDataProvider";
 import {Autocomplete, Chip, createFilterOptions, TextField} from "@mui/material";
+
 //@ts-ignore
 import _ from "lodash";
+import {useTranslation} from "react-i18next";
 
 interface IArtifact {
     id: number;
@@ -19,6 +21,7 @@ export default function Artifacts() {
     const [selectedAffixesAmount, setSelectedAffixesAmount] = useState<Record<number, number>>({});
     const [artifactEnhancements, setArtifactEnhancements] = useState(0);
 
+    const {t} = useTranslation("artifact");
 
     const [artifactData, setArtifactData] = useState<IArtifact[]>([]);
     const [generatedArtifact, setGeneratedArtifact] = useState("/giveart ");
@@ -86,7 +89,7 @@ export default function Artifacts() {
     };
 
     const getPercent = (affix:IReliquaryAffix)=>{
-        if (affix.propType.indexOf("PERCENT") !== -1 || affix.propType.indexOf("CRITICAL") !== -1 || affix.propType.indexOf("EFFICIENCY") !== -1 || affix.propType.indexOf("HURT") !== -1) {
+        if (affix.propType.indexOf("PERCENT") !== -1 || affix.propType.indexOf("CRITICAL") !== -1 || affix.propType.indexOf("EFFICIENCY") !== -1 || affix.propType.indexOf("HURT") !== -1 || affix.propType.indexOf("RATIO") !== -1 || affix.propType.indexOf("ADD") !== -1) {
             return parseFloat(String(affix.propValue*100)).toPrecision(3) + "%";
         }
         return parseInt(String(affix.propValue));
@@ -110,14 +113,14 @@ export default function Artifacts() {
                 <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                     <div>
                         <div>
-                            <p className="mt-1 max-w-2xl text-sm text-gray-500">Please fill artifact details</p>
+                            <p className="mt-1 max-w-2xl text-sm text-gray-500">{t('fill_details')}</p>
                         </div>
                         <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                             <div
                                 className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <label htmlFor="name"
                                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                                    UID
+                                    {t("uid")}
                                 </label>
                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                     <input type="text" aria-label="UID" name="uid" id="uid"  className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(event) => setUid(parseInt(event.target.value))}/>
@@ -127,14 +130,14 @@ export default function Artifacts() {
                                 className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <label htmlFor="description"
                                        className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                                    Artifact Name
+                                    {t('name')}
                                 </label>
                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                     <Autocomplete
                                         aria-label="Artifact Name" id="ArtifactName"
                                         className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                         options={artifactData}
-                                        getOptionLabel={(option) => option.name}
+                                        getOptionLabel={(option) => t(option.name)}
                                         onChange={handleArtifactChange}
                                         renderInput={(params) => <TextField {...params} label="Artifact Name" variant="outlined"/>}
                                     />
@@ -144,7 +147,7 @@ export default function Artifacts() {
                                 className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <label htmlFor="image"
                                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                                    Main Stats
+                                    {t('main_stats')}
                                 </label>
                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                     <div
@@ -153,7 +156,7 @@ export default function Artifacts() {
                                             aria-label="Artifact Main Stats" id="ArtifactMainStats"
                                             className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                             options={reliquaryMains}
-                                            getOptionLabel={(option) => option.propType}
+                                            getOptionLabel={(option) => t(option.propType)}
                                             onChange={handleMainStatChange}
                                             renderInput={(params) => <TextField {...params} label="Main Stats" variant="outlined"/>}
                                         />
@@ -164,14 +167,14 @@ export default function Artifacts() {
                                 className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <label htmlFor="start_date"
                                        className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                                    Artifact Sub Stats
+                                    {t('sub_stats')}
                                 </label>
                                 <div className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto">
                                     {reliquaryAffixes.map((affix, index) => {
                                         return (
                                             <div key={index} className="flex">
                                                 <input type="checkbox" className="mr-4 ml-4 focus:ring-indigo-500 h-4 w-4 mt-1 text-indigo-600 border-gray-300 rounded" value={affix.id} id={"select-"+affix.id} onChange={(e)=>handleAffixSelected(e,false,0)}/>
-                                                <label className="flex-grow" htmlFor={"select-"+affix.id}>{affix.propType +" - "+getPercent(affix)}</label>
+                                                <label className="flex-grow" htmlFor={"select-"+affix.id}>{t(affix.propType) +" - "+getPercent(affix)}</label>
                                                 <input type="number" defaultValue="1" min="1" className="flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>handleAffixSelected(e,true, affix.id)}/>
                                             </div>
                                         );
@@ -182,7 +185,7 @@ export default function Artifacts() {
                                 className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <label htmlFor="start_date"
                                        className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                                    Artifact Enhancement Level
+                                    {t('enhancement_level')}
                                 </label>
                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                     <input type="number" defaultValue="1" min="1" max="20" className="w-full flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>setArtifactEnhancements(Number(e.currentTarget.value))}/>
