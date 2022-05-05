@@ -5,6 +5,7 @@ import Main from "./components/Main";
 import {BrowserRouter} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
+import "./i18n";
 
 interface IState{
     headerTitle: string;
@@ -14,7 +15,7 @@ export default class App extends Component<{},IState>{
     constructor(props:{}) {
         super(props);
         this.state = {
-            headerTitle: 'Hello World'
+            headerTitle: 'Hello World',
         }
     }
 
@@ -36,6 +37,7 @@ export default class App extends Component<{},IState>{
         const MainProps = {
             handleHeaderTitleChange: this.handleHeaderTitleChange
         }
+
         return(
             <BrowserRouter>
                 <Navbar {...NavbarProps}/>

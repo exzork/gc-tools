@@ -1,6 +1,10 @@
 import React from "react";
 import MenuDesktop from "./MenuDesktop";
 import MenuMobile from "./MenuMobile";
+import {Menu} from "@mui/material";
+import i18n from "i18next";
+import {useTranslation} from "react-i18next";
+import LanguageChange from "./LanguageChange";
 
 class Navbar extends React.Component {
     handleHeaderTitleChange;
@@ -59,6 +63,7 @@ class Navbar extends React.Component {
                             <div className="hidden sm:block sm:ml-6 w-full">
                                 <div className="flex w-full">
                                     <MenuDesktop handleHeaderTitleChange={this.handleHeaderTitleChange}/>
+                                    <LanguageChange/>
                                 </div>
                             </div>
                         </div>
@@ -68,6 +73,7 @@ class Navbar extends React.Component {
                 <div className="hidden sm:hidden" id="mobile-menu">
                     <div className="px-2 pt2 pb-3 space-y-1">
                         <MenuMobile handleHeaderTitleChange={this.handleHeaderTitleChange}/>
+                        <LanguageChange/>
                     </div>
                 </div>
             </nav>
