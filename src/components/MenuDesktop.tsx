@@ -20,6 +20,12 @@ export default function MenuDesktop(props:{handleHeaderTitleChange: (title:strin
             ) : (
                 <Link to="/artifact" onClick={() => handleHeaderTitleChange("Artifact Command Generator")} className="menu-item text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Artifact</Link>
             )}
+
+            {location.pathname === "/gcauth" ? (
+            <Link to="/gcauth" className="menu-item block bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">GCAuth</Link>
+            ) : (
+            <Link to="/gcauth" onClick={() => handleHeaderTitleChange("GCAuth Token Generator")} className="menu-item block text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">GCAuth</Link>
+            )}
         </>
     )
 }
