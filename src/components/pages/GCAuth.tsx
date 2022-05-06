@@ -99,6 +99,10 @@ export default function GCAuth() {
                 try {
                     let resJson = JSON.parse(resText);
                     if (resJson.success) {
+                        setJwt(resJson.jwt);
+                        const splitToken = resJson.jwt.split(".");
+                        const payload = JSON.parse(atob(splitToken[1]));
+                        setToken(payload.token);
                         await Swal.fire({
                             toast: true,
                             position: "top-end",
@@ -108,10 +112,6 @@ export default function GCAuth() {
                             title: "Login success",
                             icon: "success"
                         });
-                        setJwt(resJson.jwt);
-                        const splitToken = resJson.jwt.split(".");
-                        const payload = JSON.parse(atob(splitToken[1]));
-                        setToken(payload.token);
                     } else {
                         await Swal.fire({
                             title: "Login failed",
