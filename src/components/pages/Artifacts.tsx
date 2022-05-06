@@ -105,7 +105,7 @@ export default function Artifacts() {
                 return x;
             });
         }
-        const generated = "/giveart "+uid+" "+selectedArtifact+" "+selectedMainStat+" "+selectedAffixesCombine.join(" ")+" "+Number(artifactEnhancements+1);
+        const generated = "/giveart @"+uid+" "+selectedArtifact+" "+selectedMainStat+" "+selectedAffixesCombine.join(" ")+" "+Number(artifactEnhancements+1);
         setGeneratedArtifact(generated);
     };
     return (
