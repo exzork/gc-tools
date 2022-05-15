@@ -54,7 +54,7 @@ export default function GCAuth() {
         fetch(baseUrl + "/authentication/type")
             .then(res => res.text())
             .then(res => {
-                if (res === "me.exzork.gcauth.handler.GCAuthAuthenticationHandler") {
+                if (res.indexOf("GCAuthAuthenticationHandler") !== -1) {
                     Swal.fire({
                         toast: true,
                         position: "top-end",
