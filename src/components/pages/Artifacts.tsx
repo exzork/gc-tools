@@ -252,7 +252,7 @@ export default function Artifacts() {
                                 {t('sub_stats')}
                             </label>
                             <div
-                                className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto grid gap-x-10 gap-y-2 grid-cols-2">
+                                className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto block md:grid md:gap-x-4 md:gap-y-2 md:grid-cols-2">
                                 {Object.keys(affixesValues).map((key, index) => {
                                     return (
                                         <div key={index} className="flex items-center mt-1">

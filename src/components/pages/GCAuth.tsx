@@ -259,7 +259,7 @@ export default function GCAuth() {
                                 className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-md">Check
                         </button>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 justify-center">
                         <div className="col-span-1">
                             <form className="mt-3 h-full flex flex-col" onSubmit={handleLogin}>
                                 <h3 className="text-lg font-medium text-gray-900 text-center">Login</h3>
@@ -293,7 +293,7 @@ export default function GCAuth() {
                                 </button>
                             </form>
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-2 md:col-span-1">
                             <form className="mt-3 h-full flex flex-col" onSubmit={handleChangePassword}>
                                 <h3 className="text-lg font-medium text-gray-900 text-center">Change Password</h3>
                                 <input type="text" placeholder="Username"
