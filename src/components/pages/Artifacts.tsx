@@ -148,7 +148,7 @@ export default function Artifacts() {
             if (propTypeValues[affix.PropType] === undefined) {
                 propTypeValues[affix.PropType] = [];
             }
-            propTypeValues[affix.PropType].push(affix.PropValue);
+            if(affix.PropValue>0) propTypeValues[affix.PropType].push(affix.PropValue);
         });
         return propTypeValues;
     };
