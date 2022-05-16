@@ -61,11 +61,6 @@ export default function Artifacts() {
                 setArtifactData(dataArtifact);
                 initReliquaryData();
             });
-
-        fetch("https://github.com/impact-moe/impact-api/wiki/Artifacts").then(res => res.json())
-            .then(data => {
-                console.log(data);
-            });
     }, []);
 
     useEffect(() => {
