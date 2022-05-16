@@ -1,7 +1,7 @@
 import {ChangeEvent, useEffect, useState} from "react";
 import ReliquaryDataProvider, {IReliquaryAffix, IReliquaryMain} from "../providers/ReliquaryDataProvider";
 import {Autocomplete, Chip, createFilterOptions, TextField} from "@mui/material";
-
+import {permutations} from "mathjs";
 //@ts-ignore
 import _ from "lodash";
 import {useTranslation} from "react-i18next";
@@ -11,15 +11,23 @@ interface IArtifact {
     name: string;
 }
 
+interface IPropTypeValues {
+    [key: string]: number[]; //number is the values
+}
+
+interface ISelectedPropTypeValues{
+    [key: string]: number[]; //number is the ids
+}
+
 export default function Artifacts() {
     const [reliquaryMains, setReliquaryMains] = useState<IReliquaryMain[]>([]);
     const [reliquaryAffixes, setReliquaryAffixes] = useState<IReliquaryAffix[]>([]);
     const [uid, setUid] = useState(0);
     const [selectedArtifact, setSelectedArtifact] = useState(0);
     const [selectedMainStat, setSelectedMainStat] = useState(0);
-    const [selectedAffixes, setSelectedAffixes] = useState<number[]>([]);
-    const [selectedAffixesAmount, setSelectedAffixesAmount] = useState<Record<number, number>>({});
     const [artifactEnhancements, setArtifactEnhancements] = useState(0);
+    const [affixesValues, setAffixesValues] = useState<IPropTypeValues>({});
+    const [selectedAffixesValues, setSelectedAffixesValues] = useState<ISelectedPropTypeValues>({});
 
     const {t} = useTranslation("artifact");
 
@@ -55,8 +63,13 @@ export default function Artifacts() {
     }, []);
 
     useEffect(() => {
+        const av: IPropTypeValues = getPropTypeValues(reliquaryAffixes);
+        setAffixesValues(av);
+    }, [reliquaryAffixes]);
+
+    useEffect(() => {
         handleGeneratedArtifact()
-    }, [uid, selectedArtifact, selectedMainStat, selectedAffixes, selectedAffixesAmount, artifactEnhancements]);
+    }, [uid, selectedArtifact, selectedMainStat, selectedAffixesValues , artifactEnhancements]);
 
     const handleArtifactChange = (event: any, value: any) => {
         if (value !== null) {
@@ -70,40 +83,88 @@ export default function Artifacts() {
         }
     };
 
-    const handleAffixSelected = (event: ChangeEvent<HTMLInputElement>, amount = false, affixId=0) => {
-        let newSelectedAffixes = [...selectedAffixes];
-        let newSelectedAffixesAmount = {...selectedAffixesAmount};
-        if (amount) {
-            newSelectedAffixesAmount[affixId]=Number(event.target.value);
-        } else {
-            if (newSelectedAffixes.indexOf(Number(event.currentTarget.value)) === -1) {
-                newSelectedAffixes.push(Number(event.currentTarget.value));
-                newSelectedAffixesAmount[Number(event.currentTarget.value)] = 1;
-            } else {
-                newSelectedAffixes.splice(newSelectedAffixes.indexOf(Number(event.currentTarget.value)), 1);
-                newSelectedAffixesAmount[Number(event.currentTarget.value)] = 0;
-            }
-        }
-        setSelectedAffixes(newSelectedAffixes);
-        setSelectedAffixesAmount(newSelectedAffixesAmount);
+    const getAffixIdByPropTypeAndPropValue = (propType: string, propValue: number) => {
+        return reliquaryAffixes.filter((x) => x.PropType === propType && x.PropValue === propValue)[0].Id;
     };
 
-    const getPercent = (affix:IReliquaryAffix)=>{
-        if (affix.PropType.indexOf("PERCENT") !== -1 || affix.PropType.indexOf("CRITICAL") !== -1 || affix.PropType.indexOf("EFFICIENCY") !== -1 || affix.PropType.indexOf("HURT") !== -1 || affix.PropType.indexOf("RATIO") !== -1 || affix.PropType.indexOf("ADD") !== -1) {
-            return parseFloat(String(affix.PropValue*100)).toPrecision(3) + "%";
+    const getListOfIdsByPropTypeAndRequestValue = (affixName: string, requestValue: number)=>{
+        const possibleValues = affixesValues[affixName];
+
+        let ids:number[] = [];
+        let closestValue = 0;
+        let less:number[] = [];
+
+        possibleValues.forEach((value) => {
+            if (value <= requestValue) {
+                less.push(value);
+            }
+        });
+
+        less.sort();
+        less.reverse();
+
+        for (let i of less) {
+            while ((closestValue+i) <= requestValue) {
+                closestValue += i;
+                const id = getAffixIdByPropTypeAndPropValue(affixName, i);
+                if (id !== undefined) {
+                    ids.push(id);
+                }
+            }
+            if(closestValue === requestValue) break;
         }
-        return parseInt(String(affix.PropValue));
+        return {ids, closestValue};
+    }
+
+    const handleAffixChange = (event: ChangeEvent<HTMLInputElement>, affixName:string) => {
+        let affixesSelected = {...selectedAffixesValues};
+        const affixValues = parseInt(event.target.value);
+        if (affixValues > 0) {
+            if (affixesSelected[affixName] === undefined) affixesSelected[affixName] = [];
+            if (affixName.indexOf("PERCENT") !== -1 || affixName.indexOf("CRITICAL") !== -1 || affixName.indexOf("EFFICIENCY") !== -1 || affixName.indexOf("HURT") !== -1 || affixName.indexOf("RATIO") !== -1 || affixName.indexOf("ADD") !== -1){
+                const {ids} = getListOfIdsByPropTypeAndRequestValue(affixName, affixValues/100);
+                affixesSelected[affixName] = ids;
+            } else {
+                const {ids} = getListOfIdsByPropTypeAndRequestValue(affixName, affixValues);
+                affixesSelected[affixName] = ids;
+            }
+        } else {
+            delete affixesSelected[affixName];
+        }
+        setSelectedAffixesValues(affixesSelected);
+    };
+
+    const handleGetAffixClosestValue = (event: ChangeEvent<HTMLInputElement>, affixName:string) => {
+        const affixValues = parseInt(event.target.value);
+        if (affixValues === 0) return;
+        const {closestValue} =getListOfIdsByPropTypeAndRequestValue(affixName, affixValues);
+        event.target.value = parseFloat(closestValue.toFixed(3)).toString();
+    }
+
+
+    const getPropTypeValues = (affixes:IReliquaryAffix[])=>{
+        let propTypeValues:IPropTypeValues = {};
+        affixes.forEach(affix=>{
+            if (propTypeValues[affix.PropType] === undefined) {
+                propTypeValues[affix.PropType] = [];
+            }
+            propTypeValues[affix.PropType].push(affix.PropValue);
+        });
+        return propTypeValues;
     };
 
     const handleGeneratedArtifact = () => {
         let selectedAffixesCombine: (string | number)[] = [];
-        if (selectedAffixes.length > 0) {
-            selectedAffixesCombine = selectedAffixes.map(x => {
-                if (selectedAffixesAmount[x] > 1) {
-                    return x + "," + selectedAffixesAmount[x];
-                }
-                return x;
-            });
+        if (Object.keys(selectedAffixesValues).length > 0) {
+            Object.keys(selectedAffixesValues).forEach(affixName => {
+                const affixValues = selectedAffixesValues[affixName];
+                const distinctValues = Array.from(new Set(affixValues));
+                distinctValues.forEach(value => {
+                    const countAffixes = affixValues.filter(x => x === value).length;
+                    if (countAffixes > 1) selectedAffixesCombine.push(value+","+countAffixes);
+                    else selectedAffixesCombine.push(value);
+                })
+            })
         }
         const generated = "/giveart @"+uid+" "+selectedArtifact+" "+selectedMainStat+" "+selectedAffixesCombine.join(" ")+" "+Number(artifactEnhancements+1);
         setGeneratedArtifact(generated);
@@ -169,15 +230,27 @@ export default function Artifacts() {
                                        className="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
                                     {t('sub_stats')}
                                 </label>
-                                <div className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto">
-                                    {reliquaryAffixes.map((affix, index) => {
+                                <div className="mt-1 sm:mt-0 sm:col-span-2 h-48 overflow-auto grid gap-x-10 gap-y-2 grid-cols-2">
+                                    {Object.keys(affixesValues).map((key, index) => {
                                         return (
-                                            <div key={index} className="flex">
-                                                <input type="checkbox" className="mr-4 ml-4 focus:ring-indigo-500 h-4 w-4 mt-1 text-indigo-600 border-gray-300 rounded" value={affix.Id} id={"select-"+affix.Id} onChange={(e)=>handleAffixSelected(e,false,0)}/>
-                                                <label className="flex-grow" htmlFor={"select-"+affix.Id}>{t(affix.PropType) +" - "+getPercent(affix)}</label>
-                                                <input type="number" defaultValue="1" min="1" className="flex-none block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md" onChange={(e)=>handleAffixSelected(e,true, affix.Id)}/>
+                                            <div key={index} className="flex items-center mt-1">
+                                                <div className="ml-3 flex-grow ">
+                                                    <div className="text-sm leading-5 text-gray-900">
+                                                        {t(key)}
+                                                    </div>
+                                                </div>
+                                                <div className="ml-auto flex-none">
+                                                    <input type="number"
+                                                           step={0.01}
+                                                           className="block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                                                           id={key}
+                                                           defaultValue={0}
+                                                           onChange={(e)=>handleAffixChange(e,key)}
+                                                           onBlur={(e)=>handleGetAffixClosestValue(e,key)}
+                                                    />
+                                                </div>
                                             </div>
-                                        );
+                                        )
                                     })}
                                 </div>
                             </div>
