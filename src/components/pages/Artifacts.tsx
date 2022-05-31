@@ -80,12 +80,12 @@ export default function Artifacts() {
 
     const handleMainStatChange = (event: any, value: any) => {
         if (value !== null) {
-            setSelectedMainStat(value.Id);
+            setSelectedMainStat(value.id);
         }
     };
 
     const getAffixIdByPropTypeAndPropValue = (propType: string, propValue: number) => {
-        return reliquaryAffixes.filter((x) => x.PropType === propType && x.PropValue === propValue)[0].Id;
+        return reliquaryAffixes.filter((x) => x.propType === propType && x.propValue === propValue)[0].id;
     };
 
     const getListOfIdsByPropTypeAndRequestValue = (affixName: string, requestValue: number) => {
@@ -146,10 +146,10 @@ export default function Artifacts() {
     const getPropTypeValues = (affixes: IReliquaryAffix[]) => {
         let propTypeValues: IPropTypeValues = {};
         affixes.forEach(affix => {
-            if (propTypeValues[affix.PropType] === undefined) {
-                propTypeValues[affix.PropType] = [];
+            if (propTypeValues[affix.propType] === undefined) {
+                propTypeValues[affix.propType] = [];
             }
-            if (affix.PropValue > 0) propTypeValues[affix.PropType].push(affix.PropValue);
+            if (affix.propValue > 0) propTypeValues[affix.propType].push(affix.propValue);
         });
         return propTypeValues;
     };
@@ -237,7 +237,7 @@ export default function Artifacts() {
                                         aria-label="Artifact Main Stats" id="ArtifactMainStats"
                                         className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                         options={reliquaryMains}
-                                        getOptionLabel={(option) => t(option.PropType)}
+                                        getOptionLabel={(option) => t(option.propType)}
                                         onChange={handleMainStatChange}
                                         renderInput={(params) => <TextField {...params} label="Main Stats"
                                                                             variant="outlined"/>}
